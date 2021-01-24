@@ -8,15 +8,17 @@
       }
       .grid-container {
         display: grid;
-        grid-template-columns: 4.2fr 0.9fr 0.1fr 0.1fr;
+        grid-template-columns: 1fr 1fr 1fr .6fr;
         grid-template-rows: 1fr 1fr 1fr;
-        gap: 0px 0px;
+        gap: 10px 10px;
         grid-template-areas:
-          "service button . ."
+          "service service service button"
+          "table table table table"
           ". . . .";
       }
       .button { grid-area: button; }
       .service { grid-area: service; }
+      .table { grid-area: table; }
     </style>
     <link rel="stylesheet" href="./css/nes.min.css">
   </head>
@@ -30,7 +32,7 @@
     <div class="is-dark grid-container">
         <div class="button">
           <div class="nes-container is-centered" style="border: none; height: 100%; padding: 30% 0 ">
-            <button type="button" class="nes-btn is-primary">SEARCH</button>
+            <button type="button" id="searchButton" class="nes-btn is-primary">SEARCH</button>
           </div>
         </div>
         <div class="service">
@@ -43,7 +45,76 @@
             <input type="text" id="command" name="command" class="nes-input is-dark" placeholder="SwitchToHobbin">
           </div>
         </div>
+      <div class="table" style="padding: 15px;" hidden id='tableDiv'>
+        <div class="nes-table-responsive">
+          <table class="nes-table is-bordered is-centered" style="width: 100%;">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Command</th>
+                <th style="width: 13%;">Boto3</th>
+                <th style="width: 10%;">CLIv1</th>
+                <th style="width: 10%;">CLIv2</th>
+                <th>Api versions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id='serviceCell'></td>
+                <td id='commandCell'></td>
+                <td id='botoCell'></td>
+                <td id='cliV1Cell'></td>
+                <td id='cliV3Cell'></td>
+                <td id='apiVersionsCell'></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+    <script>
+      var button = document.getElementById("searchButton"),
+          tableDiv = document.getElementById("tableDiv");
+
+      function updateTable(service, command, data) {
+        let boto3 = 'Not supported',
+            cliV1 = 'Not supported',
+            cliV2 = 'Not supported',
+            apiVersions = '';
+
+        tableDiv.hidden = false;
+        document.getElementById("serviceCell").innerText = service;
+        document.getElementById("commandCell").innerText = command;
+        if (data) {
+          boto3 = data.boto3 ?  data.boto3 : 'Not supported';
+          cliV1 = data.cli_v1 ? data.cli_v1 : 'Not supported';
+          cliV2 = data.cli_v2 ? data.cli_v2 : 'Not supported';
+          if (data.api_versions) {
+            for (let index in data.api_versions) {
+              const version = data.api_versions[index];
+              apiVersions += 'Ver: ' + version.api_version + (version.deprecated ? ' Derprecated <hr>' : '<hr>');
+            }
+          }
+        }
+
+        document.getElementById("botoCell").innerText = boto3;
+        document.getElementById("cliV1Cell").innerText = cliV1;
+        document.getElementById("cliV3Cell").innerText =  cliV2;
+        document.getElementById("apiVersionsCell").innerHTML = apiVersions;
+
+      }
+
+      button.addEventListener("click",function(e){
+        let serviceName = document.getElementById("service").value;
+        let commandeName = document.getElementById("command").value;
+        fetch(`/data/${serviceName}/${commandeName}/data.json`)
+          .then( 
+            response => response.json()
+            .then( data => updateTable(serviceName, commandeName, data)
+          ))
+          .catch( (response) => updateTable(serviceName, commandeName))
+      },false);
+    </script>
   </body>
 </html>
 
