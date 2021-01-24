@@ -1,1 +1,51 @@
-Hello World
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
+
+    <style>
+      html, body, pre, code, kbd, samp {
+        font-family: "font-family you want to use";
+      }
+      .grid-container {
+        display: grid;
+        grid-template-columns: 4.2fr 0.9fr 0.1fr 0.1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-template-areas:
+          "service button . ."
+          ". . . .";
+      }
+      .button { grid-area: button; }
+      .service { grid-area: service; }
+    </style>
+    <link rel="stylesheet" href="./node_modules/nes.css/css/nes.min.css">
+  </head>
+  <body style="background-color: rgb(33, 37, 41)">
+
+    <div class="nes-container is-centered" style="border: none;">
+      <img src="./img/digger-left.gif" width="10%">
+      <img src="./img/AWS-API-DIGGER.png" width="70%">
+      <img src="./img/digger-right.gif" width="10%">
+    </div>
+    <div class="is-dark grid-container">
+        <div class="button">
+          <div class="nes-container is-centered" style="border: none; height: 100%; padding: 30% 0 ">
+            <button type="button" class="nes-btn is-primary">SEARCH</button>
+          </div>
+        </div>
+        <div class="service">
+          <div style="padding: 1rem;" class="nes-field is-inline service">
+            <label for="service" style="color:#fff;">Service</label>
+            <input type="text" id="service" name="service" class="nes-input is-dark" placeholder="Best Nobbin Service">
+          </div>
+          <div style="padding: 1rem;" class="nes-field is-inline command">
+            <label for="command" style="color:#fff;">Command</label>
+            <input type="text" id="command" name="command" class="nes-input is-dark" placeholder="SwitchToHobbin">
+          </div>
+        </div>
+    </div>
+  </body>
+</html>
+
+
