@@ -1,1 +1,1 @@
-{"botocore": "1.19.38", "boto3": "1.16.38", "cli_v1": "1.18.198", "cli_v2": "2.1.12", "api_versions": [{"api.version": "2020-03-31", "deprecated": false}]}
+{"botocore": "1.19.38", "boto3": "1.16.38", "cli_v1": "1.18.198", "cli_v2": "2.1.12", "api_versions": [{"api_version": "2020-03-31", "deprecated": false}]}
