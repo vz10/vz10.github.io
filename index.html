@@ -76,7 +76,17 @@
       var button = document.getElementById("searchButton"),
           tableDiv = document.getElementById("tableDiv");
 
-      function updateTable(service, command, data) {
+      function snakeToCamel (str) {
+        str = str.charAt(0).toUpperCase() + str.slice(1);
+        return str.replace(
+            /([-_][a-z])/g,
+            (group) => group.toUpperCase()
+                            .replace('-', '')
+                            .replace('_', '')
+        );
+      }
+
+      function updateTable (service, command, data) {
         let boto3 = 'Not supported',
             cliV1 = 'Not supported',
             cliV2 = 'Not supported',
@@ -105,15 +115,17 @@
       }
 
       button.addEventListener("click",function(e){
-        let serviceName = document.getElementById("service").value;
-        let commandeName = document.getElementById("command").value;
-        fetch(`/data/${serviceName}/${commandeName}/data.json`)
+        let serviceName = document.getElementById("service").value.toLowerCase();
+        let commandName = snakeToCamel(document.getElementById("command").value);
+        fetch(`/data/${serviceName}/${commandName}/data.json`)
           .then( 
             response => response.json()
-            .then( data => updateTable(serviceName, commandeName, data)
-          ))
-          .catch( (response) => updateTable(serviceName, commandeName))
-      },false);
+            .then( 
+              data => updateTable(serviceName, commandName, data)
+            )
+          )
+          .catch( (response) => updateTable(serviceName, commandName))
+      }, false);
     </script>
   </body>
 </html>
