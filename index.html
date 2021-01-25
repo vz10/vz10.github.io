@@ -100,10 +100,12 @@
           cliV1 = data.cli_v1 ? data.cli_v1 : 'Not supported';
           cliV2 = data.cli_v2 ? data.cli_v2 : 'Not supported';
           if (data.api_versions) {
+            const versions = [];
             for (let index in data.api_versions) {
               const version = data.api_versions[index];
-              apiVersions += 'Ver: ' + version.api_version + (version.deprecated ? ' Derprecated <hr>' : '<hr>');
+              versions.push('Ver: ' + version.api_version + (version.deprecated ? ' Derprecated' : ''));
             }
+            apiVersions = versions.join('<hr>')
           }
         }
 
