@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
+    <style>
+      html, body, pre, code, kbd, samp {
+        font-family: "font-family you want to use";
+      }
+    </style>
+    <link rel="stylesheet" href="./css/nes.min.css">
+    <script>
+        window.onload = function () {
+            var chart_data = [];
+            var chart_data_index = 100;
+            var dps = []; // dataPoints
+            var title = "";
+            var cli_v2 = '-'
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                theme: "dark1",
+                title :{
+                    text: title
+                },
+                axisY: {
+                    title: "Commands per service"
+                },
+                data: [{
+                    type: "column",
+                    dataPoints: dps
+                }]
+            });
+            
+            var updateInterval = 300;
+            
+
+            fetch(`/data/chart.json`)
+            .then( 
+                response => response.json()
+                .then( 
+                    data => {chart_data = data; console.log(chart_data)}
+                )
+            )
+            .catch( (response) => console.error(response))
+            
+            var updateChart = function () {
+                if (chart_data.length > 0){
+                    let versions = chart_data[chart_data_index].version;
+                    cli_v2 = versions.cli_v2 == '2.0.0' ? cli_v2 : versions.cli_v2;
+                    title = `Botocore: ${versions.botocore}; AWS CLI v1 ${versions.cli_v1}; AWS CLI v2 ${cli_v2}`;
+                    dps.length = 0;
+                    dps.push.apply(dps, chart_data[chart_data_index].services);
+                    chart_data_index++;
+                    if (chart_data_index == chart_data.length) { 
+                        chart_data_index = 0; 
+                    }
+                }
+                document.getElementById("title").innerText = title;
+                chart.render();
+
+            };
+            
+            updateChart();
+            setInterval(function(){updateChart()}, updateInterval);
+        
+        }
+    </script>
+  </head>
+  <body style="background-color: rgb(33, 37, 41)">
+    <div class="nes-container is-centered" style="border: none;">
+      <a href="/"><img src="./img/digger-left.gif" width="10%"></a>
+      <img src="./img/AWS-API-DIGGER.png" width="70%">
+      <a href="./graph.html"><img src="./img/digger-right.gif" width="10%"></a>
+    </div>
+    <div class="nes-container is-rounded is-centered is-dark">
+        <p id="title"></p>
+    </div>
+    <div id="chartContainer" style="height: 300px; width: 90%; padding: 5%;"></div>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  </body>
+</html>
