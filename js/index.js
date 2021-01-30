@@ -129,9 +129,7 @@ services.addEventListener("input", function(e){
     const input =  e.target.value;
     if (input.length > 0 && serviceData.length > 0) {
         const choices = findMatch(input, serviceData);
-        if (choices.length > 0) {
-            showChoices(serviceChoices, choices, updateService);
-        }
+        showChoices(serviceChoices, choices, updateService);
     } else {
         serviceChoices.innerHTML = '';
     }
@@ -141,9 +139,7 @@ commands.addEventListener("input", function(e){
     const input =  e.target.value;
     if (input.length > 0 && apiData[services.value]) {
         const choices = findMatch(input, apiData[services.value]);
-        if (choices.length > 0) {
-            showChoices(commandChoices, choices, updateCommand); 
-        }
+        showChoices(commandChoices, choices, updateCommand); 
     } else {
         commandChoices.innerHTML = '';
     }
